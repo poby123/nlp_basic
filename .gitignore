@@ -1,0 +1,4 @@
+*/**/*.zip
+*/**/data/*
+*/**/checkpoint
+*/**/__pycache__/**
