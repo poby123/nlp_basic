@@ -2,3 +2,6 @@
 */**/data/*
 */**/checkpoint
 */**/__pycache__/**
+
+tokenizer.model
+tokenizer.vocab

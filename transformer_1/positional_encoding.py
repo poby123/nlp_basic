@@ -1,4 +1,5 @@
 import keras
+import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
 
@@ -34,3 +35,13 @@ class PositionalEncoding(keras.layers.Layer):
 
     def call(self, inputs):
         return inputs * self.pos_encoding[:, :tf.shape(inputs)[1], :]
+
+
+if __name__ == '__main__':
+    sample_pos_encoding = PositionalEncoding(50, 128)
+    plt.pcolormesh(sample_pos_encoding.pos_encoding.numpy()[0], cmap='RdBu')
+    plt.xlabel('Depth')
+    plt.xlim(0, 128)
+    plt.ylabel('Position')
+    plt.colorbar()
+    plt.show()

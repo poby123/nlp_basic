@@ -6,15 +6,11 @@ import zipfile
 from pathlib import Path
 
 import numpy as np
-import pandas as pd
-import tensorflow as tf
 import urllib3
-
-from keras.layers import Embedding, Dense, Input, LSTM, Masking
+from keras.layers import LSTM, Dense, Embedding, Input, Masking
+from keras.models import Model
 from keras.preprocessing.sequence import pad_sequences
 from keras.preprocessing.text import Tokenizer
-from keras.models import Model
-from keras.callbacks import ModelCheckpoint
 
 # 64
 NUM_SAMPLES = 33000
@@ -174,30 +170,15 @@ if __name__ == '__main__':
         metrics=['acc']
     )
 
-    checkpoint_path = 'checkpoint/{epoch:04d}.ckpt'
-    checkpoint_dir = os.path.dirname(checkpoint_path)
-    latest_checkpoint = tf.train.latest_checkpoint(checkpoint_dir)
-
-    model_callback = ModelCheckpoint(
-        filepath=checkpoint_path,
-        verbose=1,
-        save_weights_only=True,
-        save_best_only=True
+    model.fit(
+        x=[encoder_input_train, decoder_input_train],
+        y=decoder_target_train,
+        validation_data=(
+            [encoder_input_test, decoder_input_test],
+            decoder_target_test
+        ),
+        batch_size=128, epochs=50
     )
-    model.save_weights(checkpoint_path.format(epoch=0))
-
-    if latest_checkpoint == None:
-        model.fit(
-            x=[encoder_input_train, decoder_input_train],
-            y=decoder_target_train,
-            validation_data=(
-                [encoder_input_test, decoder_input_test],
-                decoder_target_test
-            ),
-            batch_size=128, epochs=50, callbacks=[model_callback]
-        )
-    else:
-        model.load_weights(latest_checkpoint)
 
     # Encoder
     encoder_model = Model(encoder_inputs, encoder_states)

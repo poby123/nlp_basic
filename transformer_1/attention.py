@@ -82,3 +82,22 @@ class MultiHeadAttention(tf.keras.layers.Layer):
         outputs = self.output_dense(concat_attention)
 
         return outputs
+
+
+if __name__ == '__main__':
+    temp_k = tf.constant([[10, 0, 0],
+                          [0, 10, 0],
+                          [0, 0, 10],
+                          [0, 0, 10]], dtype=tf.float32)  # (4, 3)
+
+    temp_v = tf.constant([[1, 0],
+                          [10, 0],
+                          [100, 5],
+                          [1000, 6]], dtype=tf.float32)  # (4, 2)
+
+    temp_q = tf.constant([[0, 10, 0]], dtype=tf.float32)  # (1, 3)
+    temp_out, temp_attn = scaled_dot_product_attention(
+        temp_q, temp_k, temp_v, None)
+
+    print(temp_attn)
+    print(temp_out)
